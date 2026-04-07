@@ -1,0 +1,32 @@
+# GitHub Actions + Poe AI 全自动模板
+name: Poe AI Automation
+
+# 触发条件：代码推送 / 手动运行
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:  # 允许手动点击运行
+
+jobs:
+  ai-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+
+      - name: 设置 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 安装 Poe 依赖
+        run: |
+          python -m pip install --upgrade pip
+          pip install poe-api
+
+      - name: 运行 Poe AI 任务
+        env:
+          # Poe 配置（无需修改）
+          POE_API_KEY: ${{ secrets.POE_API_KEY }}
+        run: |
+          python3 poe_ai_run.py
